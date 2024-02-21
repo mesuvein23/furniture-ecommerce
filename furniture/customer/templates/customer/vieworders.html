@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>View Orders</title>
+{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+        {{ order.fname }}
+        {{order.lname}}
+        {{order.email}}
+        {{order.phone}}
+
+    </div>
+
+    <h4 class="text-center">My Orders</h4>
+        {% for item in orderitems %}
+            <td> {{item.product.name}} </td>
+            <td> {{item.price}} </td>
+            <td> {{ item.quantity }} </td>
+        {% endfor %}
+
+
+{% endblock content %}

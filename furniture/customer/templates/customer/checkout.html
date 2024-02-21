@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+     <div class="row">
+		<div class="col-lg-6">
+			<div class="box-element" id="form-wrapper">
+				<form id="form" action="{% url 'placeorder' %}" method="POST">
+					{% csrf_token %}
+					<div id="user-info">
+						<div class="form-field">
+							<input  class="form-control" type="text" required value="{{request.user.first_name}}" name="fname" placeholder="Enter your first name.....">
+						</div>
+						<div class="form-field">
+							<input  class="form-control" type="text" required value="{{request.user.last_name}}" name="lname" placeholder="Enter your last name.....">
+						</div>
+						<div class="form-field">
+							<input  class="form-control" type="email" required value="{{ request.user.email }}" name="email" placeholder="Email..">
+						</div>
+						<div class="form-field">
+							<input  class="form-control" type="number" required value="{{ userprofile.phone }}" maxlength="10" name="phone" placeholder="Phone...">
+						</div>
+					</div>
+					
+					<div id="shipping-info">
+						<hr>
+						<p>Shipping Information:</p>
+						<hr>
+						<div class="form-field">
+							<input class="form-control" required value="{{ userprofile.address }}" type="text" name="address" placeholder="Address..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" required value="{{ userprofile.city }}" type="text" name="city" placeholder="City..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" required value="{{ userprofile.state }}" type="text" name="state" placeholder="State..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" required value="{{ userprofile.country }}" type="text" name="country" placeholder="Country">
+						</div>
+						<div class="form-field">
+							<input class="form-control" required value="{{ userprofile.zipcode }}" type="text" name="zipcode" placeholder="Zip code..">
+						</div>
+					</div>
+
+					<hr>
+					<input type="hidden" name="payment_mode" id="" value=""COD>
+					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+				</form>
+			</div>
+
+			<br>
+			<div class="box-element hidden" id="payment-info">
+				<small>Paypal Options</small>
+				<button id="make-payment">Make Payment</button>
+			</div>
+
+		</div>
+
+		<div class="col-lg-6">
+			<table class="table">
+				<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+
+				<h3>Order Summary</h3>
+				<hr>
+			{% if cart %}
+				<thead>
+				  <tr>
+					<th scope="col">Image</th>
+					<th scope="col">Title</th>
+					<th scope="col">Quantity</th>
+					<th scope="col">Price</th>
+				  </tr>
+				</thead>
+				<tbody>
+				{% for item in cart %}
+
+				  <tr>
+					<td><img class="row-image" src="{{ item.product.image.url }}" height="70px" width="70px"></td>
+					<td>{{ item.product.title }}</td>
+					<td>{{ item.cart_quantity }}</td>
+					<td>{{ item.product.selling_price }}</td>
+				  </tr>
+				{% endfor %}  
+				</tbody>
+			  </table>
+				<h5 style="margin-left: 380px;">Total:{{ total_price }}</h5>
+			{% else %}
+			  <h4>Your Cart is empty</h4>
+			{% endif %}
+
+{% endblock content %}

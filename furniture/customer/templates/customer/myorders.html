@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  <title>My Orders</title>
+{%endblock title %}
+
+{% block content %}
+
+    <h4 class="text-center">My Orders</h4>
+    <div class="container">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Order Date</th>
+                <th scope="col">Tracking Number</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in c_order %}
+                <tr>
+                    <td>{{ item.created_at }}</td>
+                    <td>{{ item.tracking_no}}</td>
+                    <td>{{ item.total_price }}</td>
+                    <td>{{item.status}}</td>
+                    <td>
+                        <a href="{% url 'orderview' item.id %}" class="btn btn-primary">View</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+    </div>
+    
+
+{% endblock content %}
