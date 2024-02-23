@@ -20,7 +20,7 @@ def vendor(request):
 
 
 
-def register(request):
+def vendorregister(request):
     if request.method == "POST":
         username = request.POST['username']
         # fname = request.POST['fname']

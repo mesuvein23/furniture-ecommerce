@@ -1,0 +1,62 @@
+<button class="btn btn-light addToCartBtn" data-product ="{{object.id}}" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Add</button>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Cart</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Title</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Action</th>
+
+          </tr>
+        </thead>
+
+
+        <tbody class="">
+          {% if cart %} 
+              {% for item in cart %}
+                <tr class="body product_data">
+                  <th scope="row">{{item.product.id}}</th>
+                  <td><img class="row-image" src="{{ item.product.image.url }}" alt="{{ item.product.title }}"></td>
+                  <td>{{item.product.title}}</td>
+                  
+                  {% if item.product.quantity >= item.cart_quantity %}
+                  <td>
+                    <div class="input-group">
+                      <button class="input-group-text decrementBtn changeQuantity" data-product="{{item.product.id}}">-</button>
+                      <input type="text" name="quantity" class="input-group-text qty-input" value="{{item.cart_quantity}}" style="width: 100px;">
+                      <button data-product="{{item.product.id}}" class="input-group-text incrementBtn changeQuantity" type="submit">+</button>
+                      <small style="font-style: italic;">{{item.product.quantity}} items left</small>
+                    </div>
+                  </td>
+                  {% else %}
+                      <td class="text text-danger">Out Of Stock</td>
+                  {% endif %}   
+                  <td>{{item.product.selling_price}}</td>
+
+                  <td>{{item.get_total}}</td>
+
+                  <td>
+                    <button class="btn btn-danger delete-cart-item" data-product="{{item.product.id}}">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              {% endfor %}  
+          {% else %}
+              <h4> Your cart is empty</h4> 
+          {% endif %}     
+        </tbody>
+
+      </table>
+  </div>
+</div>

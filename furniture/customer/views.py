@@ -3,6 +3,7 @@ from .models import *
 from vendor.models import *
 from django.views.generic import TemplateView,ListView,UpdateView,DetailView,CreateView
 from django.http import JsonResponse
+from django.contrib.auth import authenticate,login,logout
 import json
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -13,15 +14,17 @@ from django.conf import settings
 
 # Create your views here.
 def home(request):
-    return render(request, 'customer/home.html')
+    cate = Category.objects.all()
+    newarrivals = Product.objects.filter(new_arrivals=True)
+    featured_products = Product.objects.filter(top_selling=True)
+    return render(request, 'customer/home.html', {'cate':cate, 'newarrivals':newarrivals, 'featured_products':featured_products})
 
 def contact(request):
     return render(request,'customer/contact.html')
 
-def displaycateg(request):
-    cate = Category.objects.all()
-    print(cate)
-    return render(request,'navbar.html', {'cate':cate})
+# def displaycateg(request):
+#     print(cate)
+#     return render(request,'navbar.html',)
 
 class store(ListView):
     model = Product
@@ -31,6 +34,59 @@ class products_display(DetailView):
     model = Product
     fields = '__all__'
     template_name = 'customer/products_display.html'
+
+def customerlogin(request):
+    return render(request, 'customer/auth/login.html')    
+
+def HandleLogin(request):
+    if request.method == "POST":
+        login_user =request.POST['loginuser']
+        login_password = request.POST['loginpassword']
+
+        user =authenticate(request,username=login_user,password=login_password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Login successfully")   
+            return redirect('home')
+        else:
+            messages.danger(request, "Invalid username or password")   
+
+def HandleLogout(request):
+    logout(request)
+    messages.success(request, "Logout Successfully")
+    return redirect('home')
+
+def register(request):
+    if request.method == "POST":
+        try:
+            error_list, name ,address, phone = reg_validation(request, None)
+            if error_list:
+                error_message = {"error": error_list}
+                return JsonResponse(error_message, status =404)
+            else:
+                username = request.POST['username']
+                # fname = request.POST['fname']
+                # lname = request.POST['lname']
+                email = request.POST['email']
+                pass1 = request.POST['pass1']
+                pass2 =request.POST['pass2']
+                user= User.objects.create_user(username,email, pass1)
+                subject = 'welcome to GFG world'
+                message = f'Hi {user.username}, thank you for registering in Jayabarahifurniture.'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [user.email, ]
+                send_mail( subject, message, email_from, recipient_list )
+                messages.success(request, "User registered successfully")
+                return redirect('home')
+        
+        except Exception as exe:
+            print(exe)
+            error_message = {"errors": error_list}
+            return JsonResponse(error_message, status= 404)
+        
+    return render(request, 'customer/auth/register.html')
+
 
 def addToCart(request):
     if request.method == 'POST':
@@ -64,6 +120,17 @@ def cart(request):
         for item in cart:
             total_price = total_price + item.product.selling_price * item.cart_quantity
         return render(request, "customer/cart.html", {'cart':cart, 'total_price':total_price})
+    else:
+        messages.warning(request, "Login to continue")
+        return redirect('/vloginpage')
+    
+def offcart(request):
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user)
+        total_price =0
+        for item in cart:
+            total_price = total_price + item.product.selling_price * item.cart_quantity
+        return render(request, "customer/offcanvas.html", {'cart':cart, 'total_price':total_price})
     else:
         messages.warning(request, "Login to continue")
         return redirect('/vloginpage')
