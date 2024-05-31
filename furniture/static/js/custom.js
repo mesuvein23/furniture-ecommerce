@@ -71,8 +71,12 @@ $('.changeQuantity').click(function (e) {
             'csrfmiddlewaretoken': csrftoken,
         },
         success: function (response) {
-            alertify.success(response.status)
+            alertify.success(response.status);
+            setTimeout(function() {
+                location.reload();
+            }, 3); 
         }
+
     })
 })
 
@@ -86,7 +90,7 @@ $('.delete-cart-item').click(function (e) {
 
     $.ajax({
         method: "POST",
-        url: "/delelt-cart-item/",
+        url: "/delete-cart-item/",
         data: {
             'product_id' : product_id,
             'csrfmiddlewaretoken': csrftoken,

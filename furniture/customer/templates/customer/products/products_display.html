@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  <title>{{ object.title}}</title>
+{%endblock title %}
+
+
+{% block content %}
+
+<div class="container">
+  <div class="card-shadow product_data">
+    <div id="displayProduct">
+        <!-- Productdisplay detail -->
+      <div class="col mb-12" style="max-width:1300px; height: 400px;">
+        <div class="row g-0">
+
+          <div class="col-md-7">
+            <img src="{{object.image.url}}" class="img-fluid rounded-start" alt=".." style="height: 400px; width: 650px;">
+          </div>
+          
+
+          <div class="col-md-5">
+            <div class="card-body" style="margin-left: 20px;">
+              <h2 class="card-title">{{ object.title}}</h2>   
+                <span class="float-start" style="text-decoration: line-through;">Rs {{ object.marked_price | stringformat:'d'}}</span>
+                <span class="float-end"> Rs {{ object.selling_price | stringformat:'d'}}</span><br>
+
+              <div class="detail" style="height: 80px;">
+              {{ object.description | safe}}
+
+              </div>  
+              
+                <hr>
+
+              {% if obj.quantity >= 0 %}
+                  <label class="badge bg-danger">Out Of Stock</label>
+              {% else %}
+                  <label class="text-success ms-2">Instock</label>
+              {% endif %}
+
+                <div class="input-group">
+                    <button class="input-group-text decrementBtn">-</button>
+                    <input type="text" name="quantity"  class="input-group-text qty-input" id="cartValue" value="1" style="width: 100px;">
+                    <button class="input-group-text incrementBtn" type="submit">+</button>
+                    <small>{{object.quantity}} items left</small>
+                </div>
+                
+                  <div class="col-md-4">
+                        {% if obj.quantity > 0 %}
+                          <button>Wishlist</button>
+                        {% endif %}
+                        <!-- {% include 'customer/cart/offcanvas.html' %} -->
+                        <button class="btn btn-light addToCartBtn" data-product ="{{object.id}}" style="margin-left: 20px;">Add to cart</button>
+                  </div>
+              <br>
+
+              <small>SharelLink: 
+                <i class="fab fa-facebook" style="margin-left: 10px;"></i> 
+                <i class="fab fa-twitter" style="margin-left: 10px;"></i>
+                <i class="fab fa-instagram" style="margin-left: 10px;"></i>
+                <i class="fab fa-linkedin" style="margin-left: 10px;"></i>
+              </small>
+              <br>
+              <small>Categories:{{object.category}}</small>
+
+              <p>Shipping Information</p>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div></div>
+</div>
+
+
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 style="font-family: Arvo, serif;" class="text-center">New Arrivals</h1>
+            <hr>
+            <div class="owl-carousel owl-theme">
+                {% for item in newarrivals %}
+                <div class="item">
+                    <a href="{% url 'products_display' item.slug %}">
+                        <div class="card">
+                            <div class="category-image">
+                                <img src="{{ item.image.url }}" alt="newarrivals" style="width: 100%; height: 250px;;">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center">{{ item.name }}</h5>
+                                <p class="card-text text-center">Rs:{{ item.selling_price }}</p>
+                                <div class="text-center">
+                                    {% if item.quantity > 0 %}
+                                    <button class="btn btn-light addToCartBtn" data-product="{{ item.id }}">Add to Cart</button>
+                                    {% endif %}
+                                    <button class="btn btn-secondary" href="#">Wishlist</button>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

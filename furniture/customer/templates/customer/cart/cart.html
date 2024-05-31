@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  <title>Cart</title>
+{% endblock title %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const openButton = document.querySelector('[aria-labelledby="slide-over-title"]');
+    const closeButton = document.querySelector('[aria-hidden="true"]');
+    const panel = document.querySelector('.pointer-events-auto');
+
+    // Function to open the panel
+    const openPanel = () => {
+      panel.classList.add('transform', 'translate-x-0');
+      panel.classList.remove('translate-x-full');
+    };
+
+    // Function to close the panel
+    const closePanel = () => {
+      panel.classList.remove('transform', 'translate-x-0');
+      panel.classList.add('translate-x-full');
+    };
+
+    // Toggle panel visibility when open button is clicked
+    openButton.addEventListener('click', openPanel);
+
+    // Toggle panel visibility when close button is clicked
+    closeButton.addEventListener('click', closePanel);
+  });
+</script>
+
+
+{% block content %}
+{% load static %}
+<!-- <div class="container">
+ <div class="row">
+	<div class="col-lg-12">
+		<div class="box-element">
+      <a  class="btn btn-outline-dark" href="#">&#x2190; Continue Shopping</a><br>
+      <a href="{% url 'checkout' %}" class="btn btn-outline-dark">Checkout</a>
+		</div>
+
+		<br>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Title</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Action</th>
+
+          </tr>
+        </thead>
+
+
+        <tbody class="">
+          {% if cart %} 
+              {% for item in cart %}
+                <tr class="bodd product_data">
+                  <th scope="row">{{item.product.id}}</th>
+                  <td><img class="row-image" src="{{ item.product.image.url }}" alt="{{ item.product.title }}"></td>
+                  <td>{{item.product.title}}</td>
+                  
+                  {% if item.product.quantity >= item.cart_quantity %}
+                  <td>
+                    <div class="input-group">
+                      <button class="input-group-text decrementBtn changeQuantity" data-product="{{item.product.id}}">-</button>
+                      <input type="text" name="quantity" class="input-group-text qty-input" value="{{item.cart_quantity}}" style="width: 100px;">
+                      <button data-product="{{item.product.id}}" class="input-group-text incrementBtn changeQuantity" type="submit">+</button>
+                      <small style="font-style: italic;">{{item.product.quantity}} items left</small>
+                    </div>
+                  </td>
+                  {% else %}
+                      <td class="text text-danger">Out Of Stock</td>
+                  {% endif %}   
+                  <td>{{item.product.selling_price}}</td>
+
+                  <td>{{item.get_total}}</td>
+
+                  <td>
+                    <button class="btn btn-danger delete-cart-item" data-product="{{item.product.id}}">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              {% endfor %}  
+          {% else %}
+              <h4> Your cart is empty</h4> 
+          {% endif %}     
+        </tbody>
+
+      </table>
+      <th><h5 style="margin-left: 800px;">Total:<strong>Rs {{total_price}}</strong></h5></th> -->
+
+      <div class="relative z-10" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+        <!--
+          Background backdrop, show/hide based on slide-over state.
+      
+          Entering: "ease-in-out duration-500"
+            From: "opacity-0"
+            To: "opacity-100"
+          Leaving: "ease-in-out duration-500"
+            From: "opacity-100"
+            To: "opacity-0"
+        -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      
+        <div class="fixed inset-0 overflow-hidden">
+          <div class="absolute inset-0 overflow-hidden">
+            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+              <!--
+                Slide-over panel, show/hide based on slide-over state.
+      
+                Entering: "transform transition ease-in-out duration-500 sm:duration-700"
+                  From: "translate-x-full"
+                  To: "translate-x-0"
+                Leaving: "transform transition ease-in-out duration-500 sm:duration-700"
+                  From: "translate-x-0"
+                  To: "translate-x-full"
+              -->
+              <div class="pointer-events-auto w-screen max-w-md">
+                <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                  <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                    <div class="flex items-start justify-between">
+                      <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Shopping cart</h2>
+                      <div class="ml-3 flex h-7 items-center">
+                        <button type="button" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500">
+                          <span class="absolute -inset-0.5"></span>
+                          <span class="sr-only">Close panel</span>
+                          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+      
+                    <div class="mt-8">
+                      <div class="flow-root">
+                        <ul role="list" class="-my-6 divide-y divide-gray-200">
+                          <li class="flex py-6">
+                            <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                              <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="h-full w-full object-cover object-center">
+                            </div>
+      
+                            <div class="ml-4 flex flex-1 flex-col">
+                              <div>
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                  <h3>
+                                    <a href="#">Throwback Hip Bag</a>
+                                  </h3>
+                                  <p class="ml-4">$90.00</p>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Salmon</p>
+                              </div>
+                              <div class="flex flex-1 items-end justify-between text-sm">
+                                <p class="text-gray-500">Qty 1</p>
+      
+                                <div class="flex">
+                                  <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                          <li class="flex py-6">
+                            <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                              <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg" alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch." class="h-full w-full object-cover object-center">
+                            </div>
+      
+                            <div class="ml-4 flex flex-1 flex-col">
+                              <div>
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                  <h3>
+                                    <a href="#">Medium Stuff Satchel</a>
+                                  </h3>
+                                  <p class="ml-4">$32.00</p>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Blue</p>
+                              </div>
+                              <div class="flex flex-1 items-end justify-between text-sm">
+                                <p class="text-gray-500">Qty 1</p>
+      
+                                <div class="flex">
+                                  <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+      
+                          <!-- More products... -->
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+      
+                  <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+                    <div class="flex justify-between text-base font-medium text-gray-900">
+                      <p>Subtotal</p>
+                      <p>$262.00</p>
+                    </div>
+                    <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                    <div class="mt-6">
+                      <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
+                    </div>
+                    <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+                      <p>
+                        or
+                        <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">
+                          Continue Shopping
+                          <span aria-hidden="true"> &rarr;</span>
+                        </button>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+      
+  
+
+{% endblock content %}

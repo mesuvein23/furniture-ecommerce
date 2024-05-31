@@ -9,6 +9,7 @@ from vendor.models import *
 import datetime
 from django.conf import settings
 from django.core.mail import send_mail
+from django.urls import reverse_lazy
 # Create your views here.
 
 
@@ -17,8 +18,6 @@ class home(TemplateView):
 
 def vendor(request):
     return render(request, 'vendor/admin/index.html') 
-
-
 
 def vendorregister(request):
     if request.method == "POST":
@@ -40,7 +39,7 @@ def vendorregister(request):
     #     messages.error(request,"username should be greater than 3 characters")    
     # else:
         user= User.objects.create_user(username,email, pass1)
-        subject = 'welcome to GFG world'
+        subject = 'Order Placed Successfully'
         message = f'Hi {user.username}, thank you for registering in Jayabarahifurniture.'
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [user.email, ]
@@ -64,7 +63,7 @@ def HandleLogin(request):
             messages.success(request, "Login successfully")   
             return redirect('home')
         else:
-            messages.danger(request, "Invalid username or password")   
+            messages.warning(request, "Invalid username or password")   
 
 def HandleLogout(request):
     logout(request)
@@ -74,45 +73,28 @@ def HandleLogout(request):
 
 def CategoryAdd(request):
     if request.method =='POST':
-        name = request.POST['category']
-        category_image = request.FILES.Get['image']
+        name = request.POST['category_name']
         print(name)
-        print(category_image)
+        cate_slug = request.POST['category_slug']
+        print(cate_slug)
+        c_image = request.POST['category_image']
+        print(name)
         allpost = Product.objects.create( 
             name=name,
-            image = category_image            )
-    return render(request, 'vendor/category/categorycreate.html')
+            slug = cate_slug,
+            image = c_image )
+    return render(request, 'vendor/category/category_create.html')
 
 def Category(request):
     categories = Category.objects.all()
     print(categories)
-    return render(request, 'vendor/category/categorylist.html', {'categories': categories})
+    return render(request, 'vendor/category/category_list.html', {'categories': categories})
 
-def ProductCreate(request):
-    if request.method =='POST':
-        pname = request.POST['name']
-        print(pname)
-        pdescription = request.POST['description']
-        pimage = request.FILES['image']
-        pslug = request.POST['productslug']
-        pm_price = request.POST['m_price']
-        ps_price = request.POST['s_price']
-        # pnew_arrivals = request.POST['newarrivals']
-        # ptop_selling = request.POST['topselling']
-
-        allproduct = Product.objects.create(
-            title = pname,
-            description = pdescription,
-            image = pimage,
-            slug = pslug,
-            m_price = pm_price,
-            s_price = ps_price,
-            # new_arrivals = pnew_arrivals,
-            # top_selling = ptop_selling
-        )
-        print(allproduct)
-    return render(request, 'vendor/productcreate.html')
-        
+class ProductCreate(CreateView):
+    model = Product
+    fields = '__all__'
+    template_name = "vendor/products/product_create.html"
+    success_url = reverse_lazy('vendor/products/product_list')
 
 class ProductDisplay(TemplateView):
     template_name = 'vendor/productdisplay.html'

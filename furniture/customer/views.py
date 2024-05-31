@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .models import *
 from vendor.models import *
 from django.views.generic import TemplateView,ListView,UpdateView,DetailView,CreateView
@@ -28,12 +28,35 @@ def contact(request):
 
 class store(ListView):
     model = Product
-    template_name = 'customer/store.html'
+    template_name = 'customer/products/store.html'
+
+class show_category(ListView):
+    model = Category
+    template_name = 'customer/categories/display_categories.html'
+
 
 class products_display(DetailView):
     model = Product
     fields = '__all__'
-    template_name = 'customer/products_display.html'
+    template_name = 'customer/products/show_product.html'
+    
+class categories_display(DetailView):
+    model = Category
+    fields = '__all__'
+    template_name = 'customer/categories/display_categories.html'
+
+
+
+def category_item(request, slug):
+    if (Category.objects.filter(slug=slug)):
+        products = Product.objects.filter(category__slug=slug)
+        print(products)
+        category_name = Category.objects.filter(slug=slug).first()
+        print(category_name)
+        return render(request, 'customer/categories/category.html', { 'products': products , 'category_name' : category_name})
+    else:
+        messages.warning(request, "No such category found")
+        return redirect('/category_item')
 
 def customerlogin(request):
     return render(request, 'customer/auth/login.html')    
@@ -92,7 +115,7 @@ def addToCart(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
             prod_id = request.POST.get('product_id')
-            action = request.POST.get('action')
+            # action = request.POST.get('action')
             cart_qty = request.POST.get('cart_quantity')
             
             try:
@@ -119,7 +142,7 @@ def cart(request):
         total_price =0
         for item in cart:
             total_price = total_price + item.product.selling_price * item.cart_quantity
-        return render(request, "customer/cart.html", {'cart':cart, 'total_price':total_price})
+        return render(request, "customer/cart/cart.html", {'cart':cart, 'total_price':total_price})
     else:
         messages.warning(request, "Login to continue")
         return redirect('/vloginpage')
@@ -130,7 +153,7 @@ def offcart(request):
         total_price =0
         for item in cart:
             total_price = total_price + item.product.selling_price * item.cart_quantity
-        return render(request, "customer/offcanvas.html", {'cart':cart, 'total_price':total_price})
+        return render(request, "customer/cart/offcanvas.html", {'cart':cart, 'total_price':total_price})
     else:
         messages.warning(request, "Login to continue")
         return redirect('/vloginpage')
@@ -161,7 +184,7 @@ def checkout(request):
         total_price = sum(item.product.selling_price * item.cart_quantity for item in cart)
 
         userprofile = Profile.objects.filter(user=request.user).first()
-        return render(request, "customer/checkout.html", {'cart': cart, 'total_price': total_price,'userprofile':userprofile})
+        return render(request, "customer/cart/checkout.html", {'cart': cart, 'total_price': total_price,'userprofile':userprofile})
 
     else:
         messages.warning(request, "Login to continue")
@@ -246,7 +269,7 @@ def placeorder(request):
 def orders(request):
     if request.user.is_authenticated:
         c_order = Order.objects.filter(user=request.user)
-        return render(request, 'customer/myorders.html', {'c_order':c_order})
+        return render(request, 'customer/orders/myorders.html', {'c_order':c_order})
     else: 
         messages.warning(request, "Login to continue")
         return redirect('/')
@@ -257,4 +280,4 @@ def vieworder(request,t_no):
     print(order)
     orderitems = OrderItem.objects.filter(order=order)
     print(orderitems)
-    return render(request, 'customer/vieworders.html',{'order':order, 'orderitems':orderitems})
+    return render(request, 'customer/orders/vieworders.html',{'order':order, 'orderitems':orderitems})

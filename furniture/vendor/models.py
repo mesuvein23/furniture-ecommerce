@@ -19,6 +19,8 @@ class Category(Base):
     image = models.ImageField(upload_to='images/' , null=True, default="")
 
     class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
         db_table = 'category'
 
     def __str__(self):
@@ -33,6 +35,9 @@ class Product(Base):
     image = models.ImageField(upload_to='images/' , null=True, default="")
     quantity =models.IntegerField(null=False, default=False)
     slug = models.CharField(max_length=50)
+    color = models.CharField(max_length=50, default="")
+    material = models.CharField(max_length=50, default="")
+    dimension = models.CharField(max_length=50, default="")
     marked_price = models.IntegerField()
     selling_price = models.IntegerField()
     new_arrivals = models.BooleanField(default="")

@@ -1,9 +1,5 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <h1 style="font-family: Arvo, serif;" class="text-center">New Arrivals</h1>
-            <hr>
-            <div class="owl-carousel owl-theme">
                 {% for item in newarrivals %}
                     <div class="item">
                         <a href="{% url 'products_display' item.slug %}">
@@ -11,7 +7,7 @@
                                 <div class="category-image">
                                     <img src="{{ item.image.url }}" alt="newarrivals" class="w-100">
                                 </div>
-                                <h4 class="text-center">{{item.name}}</h4>
+                                <a class="text-center">{{item.name}}</a>
                                 <p>Rs:{{item.selling_price}}</p>
                             </div>
                         </a>
@@ -24,7 +20,5 @@
                     </div>
                 {% endfor %}   
                 
-            </div>
-        </div>
     </div>
 </div>

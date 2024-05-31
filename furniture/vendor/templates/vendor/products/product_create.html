@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h3 class="row justify-content-center">Add Products</h3>
+    <form method="POST" class="container-sm" action="{% url 'product_create' %}">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label for="name">Product Title</label>
+            <input type="text" class="form-control" name="name" placeholder="enter your name">
+        </div>
+        
+        <div class="col-md-6">
+            <label for="description">Category</label>
+            <select name="category" class="form-control">
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label for="description">Description</label>
+            <input type="text" name="description" placeholder="enter you product dettails" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label for="image">Image</label>
+            <input type="file" name="image" src="" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label for="quantity">Quantity</label>
+            <input type="number" name="quantity" placeholder="enter you markedprice" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label for="address">Slug</label>
+            <input type="text" name="productslug" placeholder="" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label for="text">Color</label>
+            <input type="text" name="product-color" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label for="product-material">Material</label>
+            <input type="text" name="product-material" placeholder="enter you product dettails" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label for="product-material">Dimensions</label>
+            <input type="text" name="dimension" placeholder="enter you product dettails" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label for="markedprice">Marked Price</label>
+            <input type="number" name="marked_price" placeholder="enter you markedprice" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label for="sellingprice">Selling Price</label>
+            <input type="number" name="selling_price" placeholder="enter sellingprice" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <input type="checkbox" id="newarrivals" name="newarrivals" value="1">
+            <label for="newarrivals">New arrivals</label><br>
+        </div>
+
+        <div class="col-md-6">
+            <input type="checkbox" id="topsell" name="topselling" value="1">
+            <label for="topselling">topselling</label><br>
+        </div>
+        <input type="submit" class="btn btn-primary" value="submit">
+        </div>
+    </form>
+
+
+{% endblock content %}
