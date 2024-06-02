@@ -13,6 +13,8 @@ class Base(models.Model):
     class Meta:
         abstract = True
 
+         
+
 class Category(Base):
     slug = models.CharField(max_length=50, default="")
     name = models.CharField(max_length=50, default="")

@@ -17,10 +17,12 @@ urlpatterns = [
 	path('contact/', views.contact, name="contact"),
     
 	path('login/', views.customerlogin, name="login"),
+    path('logout/', views.HandleLogout, name="logout"),
 	path('register/', views.register, name="register"),
     
 	path('offcart/', views.offcart, name="ofcart"),
 
+	path('navbar/', views.navbar, name="navbar"),
 
 	path('add-to-cart/', views.addToCart, name="add-to-cart"),
 	path('cart/', views.cart, name="cart"),

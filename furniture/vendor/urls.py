@@ -13,4 +13,7 @@ urlpatterns = [
     path('vendorlogin/', views.HandleLogin, name="vendorlogin"),
     path('vendorlogput/', views.HandleLogout, name="vendorlogout"),
 
+    path('vendorregister/', views.register, name="vendorregister"),
+
+
 ]

@@ -71,10 +71,8 @@ $('.changeQuantity').click(function (e) {
             'csrfmiddlewaretoken': csrftoken,
         },
         success: function (response) {
+            location.reload();
             alertify.success(response.status);
-            setTimeout(function() {
-                location.reload();
-            }, 3); 
         }
 
     })
@@ -98,6 +96,7 @@ $('.delete-cart-item').click(function (e) {
         success: function (response) {
             alertify.success(response.status)
             $('.cartdata').load(location.href + " .cartdata");
+            location.reload();
         }
     })
 })

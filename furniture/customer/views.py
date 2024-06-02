@@ -20,7 +20,30 @@ def home(request):
     return render(request, 'customer/home.html', {'cate':cate, 'newarrivals':newarrivals, 'featured_products':featured_products})
 
 def contact(request):
-    return render(request,'customer/contact.html')
+    if request.method == "POST":
+        fname = request.POST['first-name']
+        print(fname)
+        lname = request.POST['last-name']
+        print(lname)
+        email = request.POST['email']
+        print(email)
+        phone = request.POST['phone-number']
+        print(phone)
+        message = request.POST['message']
+        print(message)
+
+        data = Contact.objects.create(
+            fname=fname,
+            lname=lname,
+            email=email,
+            phone=phone,
+            message=message,
+        )
+        messages.success(request, "succesfully submited")
+    return render(request, 'customer/contact.html')
+
+def navbar(request):
+    return render(request, 'customer/navbar.html')
 
 # def displaycateg(request):
 #     print(cate)

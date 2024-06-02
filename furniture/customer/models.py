@@ -3,6 +3,16 @@ from tinymce.models import HTMLField
 from django.contrib.auth.models import User
 from vendor.models import *
 
+class Contact(models.Model):
+    fname = models.CharField(max_length=50) 
+    lname = models.CharField(max_length=50) 
+    email = models.EmailField(max_length=254)   
+    phone = models.BigIntegerField()
+    message = models.TextField()
+
+    def __str__(self):
+        return self.fname + 'by' + self.lname
+    
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
